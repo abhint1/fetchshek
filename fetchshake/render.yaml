@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fetchshek-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: CORS_ORIGINS
+        value: https://YOUR-FRONTEND.vercel.app
+      - key: MAX_DOWNLOAD_MB
+        value: "500"
