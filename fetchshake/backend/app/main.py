@@ -382,7 +382,16 @@ async def analyze(req: AnalyzeRequest):
     submitted_url = str(req.url)
 
     try:
-        resolved = await resolve_url(submitted_url)
+        # YouTube URLs are passed directly to yt-dlp. Avoid making an
+        # additional preliminary HTTP request that is unnecessary for
+        # YouTube extraction. Other platforms keep the existing behavior.
+        platform = identify_platform(submitted_url)
+
+        if platform == "YouTube":
+            resolved = validate_public_url(submitted_url)
+        else:
+            resolved = await resolve_url(submitted_url)
+
         platform = identify_platform(resolved)
 
         try:
